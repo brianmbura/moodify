@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodify - AI-Powered Emotion Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Authentication Container -->
+    <div id="auth-container" class="auth-container">
+        <!-- Login Form -->
+        <div id="login-form" class="auth-form active">
+            <div class="auth-card">
+                <div class="logo">
+                    <div class="logo-icon">M</div>
+                    <h1>Moodify</h1>
+                </div>
+                <h2>Welcome back</h2>
+                <p class="auth-subtitle">Sign in to continue your emotional journey</p>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+                
+                <div class="auth-links">
+                    <a href="#" id="forgot-password">Forgot Password?</a>
+                    <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" class="auth-form">
+            <div class="auth-card">
+                <div class="logo">
+                    <div class="logo-icon">M</div>
+                    <h1>Moodify</h1>
+                </div>
+                <h2>Join Moodify</h2>
+                <p class="auth-subtitle">Start tracking your emotional well-being today</p>
+                
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signup-name">Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Sign Up</button>
+                </form>
+                
+                <div class="auth-links">
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app-container" class="app-container hidden">
+        <!-- Desktop Header -->
+        <header class="desktop-header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">M</div>
+                    <h1>Moodify</h1>
+                </div>
+                
+                <nav class="desktop-nav">
+                    <button class="nav-btn active" data-tab="dashboard">
+                        <span class="nav-icon">🏠</span>
+                        <span>Home</span>
+                    </button>
+                    <button class="nav-btn" data-tab="journal">
+                        <span class="nav-icon">✍️</span>
+                        <span>Log</span>
+                    </button>
+                    <button class="nav-btn" data-tab="analytics">
+                        <span class="nav-icon">📊</span>
+                        <span>Trends</span>
+                    </button>
+                    <button class="nav-btn" data-tab="profile">
+                        <span class="nav-icon">👤</span>
+                        <span>Profile</span>
+                    </button>
+                </nav>
+
+                <div class="header-actions">
+                    <button id="premium-btn" class="btn-premium">
+                        <span class="premium-icon">👑</span>
+                        <span>Upgrade</span>
+                    </button>
+                    <div class="user-avatar">👩‍💻</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <div id="dashboard" class="tab-content active">
+                <div class="container">
+                    <!-- Welcome Card -->
+                    <div class="welcome-card">
+                        <div class="welcome-header">
+                            <div>
+                                <h1 class="welcome-title">Good afternoon, Katie</h1>
+                                <p class="welcome-subtitle">How are you feeling today?</p>
+                            </div>
+                            <button class="btn-premium-small" onclick="showPremiumModal()">
+                                <span class="premium-icon">👑</span>
+                                <span>Premium</span>
+                            </button>
+                        </div>
+                        <button class="btn-primary" onclick="switchTab('journal')">Log mood</button>
+                    </div>
+
+                    <!-- Today's Mood -->
+                    <div class="mood-card">
+                        <h2 class="card-title">Today's mood</h2>
+                        <div id="todays-mood-content">
+                            <div class="no-mood">
+                                <div class="no-mood-icon">📅</div>
+                                <p>No mood logged today</p>
+                                <button class="btn-link" onclick="switchTab('journal')">Log your mood</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Weekly Preview -->
+                        <div class="weekly-preview">
+                            <h3 class="preview-title">This week</h3>
+                            <div class="mini-chart">
+                                <canvas id="weeklyChart" width="300" height="80"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-teal">📈</div>
+                            <div class="stat-content">
+                                <p class="stat-label">This week</p>
+                                <p class="stat-value" id="weekly-positive">65% positive</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon bg-yellow">📅</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Streak</p>
+                                <p class="stat-value" id="streak-days">3 days</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Insights -->
+                    <div class="insights-card">
+                        <h2 class="card-title">AI Insights</h2>
+                        <div class="insight-item">
+                            <p>You've been maintaining a positive outlook this week! 🌟</p>
+                        </div>
+                        <div class="insight-item">
+                            <p>Consider taking short breaks when feeling overwhelmed. Your mood improves significantly after rest periods.</p>
+                        </div>
+                        <button class="btn-link premium-link" onclick="showPremiumModal()">
+                            Get personalized insights with Premium →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journal/Mood Logging -->
+            <div id="journal" class="tab-content">
+                <div class="container">
+                    <div class="journal-header">
+                        <h1>How are you feeling today?</h1>
+                        <p>Take a moment to reflect on your emotions</p>
+                    </div>
+
+                    <!-- AI Insight Display -->
+                    <div id="ai-insight" class="ai-insight hidden">
+                        <div class="insight-icon">✨</div>
+                        <div class="insight-content">
+                            <h3>AI Insight</h3>
+                            <p id="insight-text"></p>
+                        </div>
+                    </div>
+
+                    <!-- Mood Form -->
+                    <div class="mood-form-card">
+                        <form id="moodForm">
+                            <div class="form-group">
+                                <label for="mood-text">Write about your day...</label>
+                                <textarea 
+                                    id="mood-text" 
+                                    placeholder="I had a nice chat with my friend over lunch..."
+                                    rows="4"
+                                ></textarea>
+                            </div>
+
+                            <div class="mood-selection">
+                                <label>Select your mood</label>
+                                <div class="mood-emojis">
+                                    <button type="button" class="mood-emoji" data-mood="very-sad" data-label="Very Sad">😢</button>
+                                    <button type="button" class="mood-emoji" data-mood="sad" data-label="Sad">😞</button>
+                                    <button type="button" class="mood-emoji" data-mood="neutral" data-label="Neutral">😐</button>
+                                    <button type="button" class="mood-emoji" data-mood="happy" data-label="Happy">🙂</button>
+                                    <button type="button" class="mood-emoji" data-mood="very-happy" data-label="Very Happy">😄</button>
+                                </div>
+                                <p id="mood-label" class="mood-label"></p>
+                            </div>
+
+                            <button type="submit" class="btn-primary" id="submit-mood" disabled>
+                                <span class="btn-text">Submit</span>
+                                <span class="btn-icon">📤</span>
+                            </button>
+                        </form>
+
+                        <div class="ai-note">
+                            <span class="ai-icon">✨</span>
+                            <span>Entry will be analyzed using AI for sentiment insights</span>
+                        </div>
+                    </div>
+
+                    <!-- Premium Teaser -->
+                    <div class="premium-teaser">
+                        <div class="premium-icon">👑</div>
+                        <div class="premium-content">
+                            <h3>Unlock Premium Features</h3>
+                            <ul class="premium-features">
+                                <li>Advanced mood pattern analysis</li>
+                                <li>Personalized recommendations</li>
+                                <li>Export your data</li>
+                                <li>Custom mood categories</li>
+                            </ul>
+                            <button class="btn-premium" onclick="showPremiumModal()">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics -->
+            <div id="analytics" class="tab-content">
+                <div class="container">
+                    <div class="analytics-header">
+                        <h1>Mood Trends</h1>
+                        <p>Discover patterns in your emotional journey</p>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-teal">📈</div>
+                            <div class="stat-content">
+                                <p class="stat-label">This week</p>
+                                <p class="stat-value">65% positive</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-yellow">📅</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Streak</p>
+                                <p class="stat-value">3 days</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-pink">🏆</div>
+                            <div class="stat-content">
+                                <p class="stat-label">This month</p>
+                                <p class="stat-value">72% positive</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue">📝</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Total entries</p>
+                                <p class="stat-value">24 entries</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h3>Mood Over Time</h3>
+                            <canvas id="moodChart" width="400" height="200"></canvas>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <h3>Emotion Distribution</h3>
+                            <canvas id="distributionChart" width="300" height="300"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- AI Insights -->
+                    <div class="insights-section">
+                        <h3>AI Generated Insights</h3>
+                        <div class="insight-item">
+                            <p>Your mood has been improving lately. Keep up the positive activities! 🌟</p>
+                        </div>
+                        <div class="insight-item">
+                            <p>You tend to feel better on weekdays. Consider what weekday routines work best for you.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile -->
+            <div id="profile" class="tab-content">
+                <div class="container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">👩‍💻</div>
+                        <div class="profile-info">
+                            <h1>Katie Johnson</h1>
+                            <p>katie@example.com</p>
+                            <div class="premium-badge hidden" id="premium-badge">
+                                <span class="premium-icon">👑</span>
+                                <span>Premium Member</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-sections">
+                        <div class="profile-card">
+                            <h3>Preferences</h3>
+                            <div class="preference-item">
+                                <label>Daily Reminders</label>
+                                <div class="toggle">
+                                    <input type="checkbox" id="daily-reminders" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                            <div class="preference-item">
+                                <label>Weekly Reports</label>
+                                <div class="toggle">
+                                    <input type="checkbox" id="weekly-reports">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-card">
+                            <h3>Privacy Settings</h3>
+                            <div class="preference-item">
+                                <label>Share anonymized data for research</label>
+                                <div class="toggle">
+                                    <input type="checkbox" id="share-data">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                            <div class="preference-item">
+                                <label>AI Analysis</label>
+                                <div class="toggle">
+                                    <input type="checkbox" id="ai-analysis" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-card">
+                            <h3>Account</h3>
+                            <button class="btn-secondary">Change Password</button>
+                            <button class="btn-secondary">Export Data</button>
+                            <button class="btn-danger">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Bottom Navigation -->
+        <nav class="mobile-nav">
+            <button class="nav-btn active" data-tab="dashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-tab="journal">
+                <span class="nav-icon">✍️</span>
+                <span>Log</span>
+            </button>
+            <button class="nav-btn" data-tab="analytics">
+                <span class="nav-icon">📊</span>
+                <span>Trends</span>
+            </button>
+            <button class="nav-btn" data-tab="profile">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+        <!-- Floating Action Button -->
+        <button id="fab" class="fab" onclick="switchTab('journal')">
+            <span>➕</span>
+        </button>
+    </div>
+
+    <!-- Premium Modal -->
+    <div id="premium-modal" class="modal hidden">
+        <div class="modal-overlay" onclick="hidePremiumModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upgrade to Premium</h2>
+                <button class="modal-close" onclick="hidePremiumModal()">✕</button>
+            </div>
+            
+            <div class="premium-plans">
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h3>Freemium</h3>
+                        <div class="plan-price">Free</div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Basic mood logging</li>
+                        <li>✅ Simple analytics</li>
+                        <li>❌ Advanced insights</li>
+                        <li>❌ Data export</li>
+                    </ul>
+                </div>
+
+                <div class="plan-card featured">
+                    <div class="plan-badge">Most Popular</div>
+                    <div class="plan-header">
+                        <h3>Premium</h3>
+                        <div class="plan-price">$4.99<span>/month</span></div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Everything in Free</li>
+                        <li>✅ Advanced mood analytics</li>
+                        <li>✅ Personalized AI insights</li>
+                        <li>✅ Data export & backup</li>
+                        <li>✅ Custom mood categories</li>
+                        <li>✅ Priority support</li>
+                    </ul>
+                    <button class="btn-premium" onclick="upgradeToPremium()">Upgrade Now</button>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h3>Enterprise</h3>
+                        <div class="plan-price">Contact us</div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✅ Everything in Premium</li>
+                        <li>✅ Team dashboards</li>
+                        <li>✅ HR wellness integration</li>
+                        <li>✅ Custom branding</li>
+                    </ul>
+                    <button class="btn-secondary">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p>Analyzing your mood...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
