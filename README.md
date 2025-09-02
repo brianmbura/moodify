@@ -40,7 +40,7 @@ Style: Minimal, flat, modern with smooth animations, rounded corners, and whites
 
 # 🚀 Getting Started
 1. Clone the repository
-git clone https://github.com/your-username/moodify.git
+git clone [https://github.com/your-username/moodify.git](https://github.com/brianmbura/moodify)
 cd moodify
 
 2. Open in browser
