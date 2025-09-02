@@ -54,7 +54,7 @@ To enable AI-powered sentiment analysis, sign up for a free Hugging Face API key
 
 # 🌐 Live Demo
 
-👉 Try Moodify Online
+👉 [Try Moodify Online](https://brianmbura.github.io/moodify/)
 
 # 🛠 Tech Stack
 
